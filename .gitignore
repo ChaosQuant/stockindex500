@@ -126,3 +126,7 @@ venv.bak/
 /src/result/result_0515-15491557906576-0.3430.csv
 /src/stacking/m2_lgb_copy.py
 /src/stacking/m1_xgb_copy.py
+.DS_Store
+.idea/
+.idea
+/.gitignore

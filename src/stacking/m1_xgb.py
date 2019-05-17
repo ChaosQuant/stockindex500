@@ -65,9 +65,9 @@ class XGBooster(object):
         print('spend time :' + str((time.time() - xgb_start)) + '(s)')
         return self.best_score, self.best_round, cv_rounds, self.best_model
 
-    def predict(self, x_pred):
+    def predict(self, bst_model, x_pred):
         dpred = xgb.DMatrix(x_pred)
-        return self.best_model.predict(dpred)
+        return bst_model.predict(dpred)
 
     def _kfold(self, dtrain):
         cv_rounds = xgb.cv(self.xgb_params, dtrain,
@@ -115,14 +115,15 @@ def cal_acc(test_data, pre_data):
 
 
 def xgb_predict(model, x_test, y_test, save_result_path=None):
+    print('x_test:\n %s' % x_test)
     d_test = xgb.DMatrix(x_test)
     if conf.params['objective'] == "multi:softmax":
         y_pred = model.predict(d_test)
         print('shape_of_pre: %s' % y_pred)
         # 如果输入数据y_test为array
-        # result = y_test.reshape(1, -1) == y_pred
+        result = y_test.reshape(1, -1) == y_pred
         # 如果输入数据y_test为dataframe
-        result = y_test.values.reshape(1, -1) == y_pred
+        # result = y_test.values.reshape(1, -1) == y_pred
         print('the accuracy:\t', float(np.sum(result)) / len(y_pred))
     else:
         # 输出概率
@@ -197,8 +198,8 @@ if __name__ == '__main__':
     print('y_test_pre: %s' % y_test.head())
 
     # 数据统计用
-    x_test.to_csv('../result/x_test_{}.csv'.format(now))
-    y_test.to_csv('../result/y_test_{}.csv'.format(now))
+    x_test.to_csv('../result/x_test_{}.csv'.format(now), index=0)
+    y_test.to_csv('../result/y_test_{}.csv'.format(now), index=0)
 
     # 样本预处理
     x_train = x_train.drop([174], axis=1)
@@ -208,9 +209,9 @@ if __name__ == '__main__':
 
     print('x_train: %s' % x_train.head())
     print('y_train: %s' % y_train.head())
-    print('x_test: %s' % x_test.head())
+    print('x_test' % x_test.head())
     print('y_test: %s' % y_test.head())
 
     # 模型训练
-    run_cv(x_train, x_test, y_train, y_test)
+    run_cv(x_train.values, x_test.values, y_train.values, y_test.values)
 
