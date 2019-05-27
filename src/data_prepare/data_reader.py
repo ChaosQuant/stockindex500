@@ -56,10 +56,10 @@ def label_created(df):
     # aa = df[['TOPEN', 'HIGH', 'LOW', 'TCLOSE', 'VOTURNOVER', 'VATURNOVER']].values.reshape(-1)
 
     # df = df['TCLOSE']
-    tclose_30 = df.values[29]
-    tclose_50 = df.values[49]
+    tclose_30 = df.values[29]  # 第30分钟的数据值
+    tclose_50 = df.values[49]  # 第50分钟的数据值
 
-    tclose_min = min(df.values[30:])
+    tclose_min = min(df.values[30:])   # 30分钟之后的数据，包括第三十分钟
     tclose_max = max(df.values[30:])
     # 相对于前一时间点的close， 跳到最低点的值
     t_min = tclose_min - tclose_30
@@ -92,8 +92,8 @@ for index in tmp_data.index:
     print("len_tmp %s" % len(tmp))
     date = tmp['TRADEDATE'].iloc[-1]
     print('date %s' % date)
-    training_data = tmp[['TOPEN', 'HIGH', 'LOW', 'TCLOSE', 'VOTURNOVER', 'VATURNOVER']].iloc[0:29, :].values.reshape(1, -1).tolist()
-    print("training_data %s" % training_data)
+    training_data = tmp[['TOPEN', 'HIGH', 'LOW', 'TCLOSE', 'VOTURNOVER', 'VATURNOVER']].iloc[0:30, :].values.reshape(1, -1).tolist()
+    print("training_data %s" % (training_data))
     training_data[0].append(date)
     training_data_set += training_data
 
@@ -123,12 +123,15 @@ label_df = pd.DataFrame(label_set, columns=['label_retrns', 't_min', 't_max', 'm
 # print(np.array(training_data_set))
 
 # 数据保存
-with open("train_df.pkl", 'wb') as pk:
+with open("train_df_50.pkl", 'wb') as pk:
     # pickle.dump(training_data_set, pk)
+    # pickle.dump(training_data_df, pk)
     pickle.dump(training_data_df, pk)
 
-with open("label_df.pkl", 'wb') as pk:
+
+with open("label_df_50.pkl", 'wb') as pk:
     # pickle.dump(label_set, pk)
+    # pickle.dump(label_df, pk)
     pickle.dump(label_df, pk)
 
 

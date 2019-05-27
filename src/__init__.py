@@ -30,3 +30,22 @@ import pandas as pd
 #
 # print(b)
 
+import time
+from datetime import datetime, timedelta
+from dateutil.relativedelta import relativedelta
+
+n = 2
+
+time_array = datetime.strptime(str(20160229), "%Y%m%d")
+time_array = time_array - timedelta(days=365) * n
+date_time = int(datetime.strftime(time_array, "%Y%m%d"))
+print(date_time)
+
+# time_array = time.strptime(str(20160229), "%Y%m%d")
+# year = time_array.tm_year - 1
+# mon = time_array.tm_mon
+# day = time_array.tm_mday
+# date_time = str(year) + str(mon) + str(day)
+# time_array = time.strptime(date_time, "%Y%m%d")
+# date_time = int(time.strftime("%Y%m%d", time_array))
+# print(date_time)

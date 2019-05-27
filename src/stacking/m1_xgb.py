@@ -17,6 +17,7 @@ import time
 import pickle
 import argparse
 import numpy as np
+from math import *
 import xgboost as xgb
 from src.stacking.configuration import conf
 import pandas as pd
@@ -154,6 +155,21 @@ def run_cv(x_train, x_test, y_train, y_test):
     xgb_predict(best_model, x_test, y_test, save_result_path=result_saved_path)
 
 
+def train_test_sp(train_dataset_df, label_dataset_df, test_size=0.2,random=None):
+    # 训练集和测试集划分
+    if random:
+        # 随机划分
+        x_train, x_test, y_train, y_test = train_test_split(train_dataset_df, label_dataset_df, test_size=0.02, random_state=10000, shuffle=True)
+    else:
+        # 按时间序列前后划分
+        len_data = len(train_dataset_df)
+        a1 = ceil(len_data * (1 - test_size))
+        x_train, x_test = train_dataset_df[:a1], train_dataset_df[a1:]
+        y_train, y_test = label_dataset_df[:a1], label_dataset_df[a1:]
+
+    return x_train, x_test, y_train, y_test
+
+
 now = time.strftime('%Y-%m-%d %H:%M')
 
 if __name__ == '__main__':
@@ -185,25 +201,28 @@ if __name__ == '__main__':
 
     # 输入数据为dataframe格式
 
-    with open('../data_prepare/train_df.pkl', 'rb') as pk:
+    with open('../data_prepare/train_df_50_pro.pkl', 'rb') as pk:
         train_dataset_df = pickle.load(pk)
 
-    with open('../data_prepare/label_df.pkl', 'rb') as pk:
+    with open('../data_prepare/label_df_50_pro.pkl', 'rb') as pk:
         label_dataset_df = pickle.load(pk)
 
-    x_train, x_test, y_train, y_test = train_test_split(train_dataset_df[:30000], label_dataset_df[:30000], test_size=0.2, random_state=10000, shuffle=True)
+    # x_train, x_test, y_train, y_test = train_test_split(train_dataset_df[:30000], label_dataset_df[:30000], test_size=0.2, random_state=10000, shuffle=True)
+    x_train, x_test, y_train, y_test = train_test_sp(train_dataset_df[:60000], label_dataset_df[:60000])
     print('x_train_pre: %s' % x_train.head())
     print('y_train_pre: %s' % y_train.head())
     print('x_test_pre: %s' % x_test.head())
     print('y_test_pre: %s' % y_test.head())
 
     # 数据统计用
-    x_test.to_csv('../result/x_test_{}.csv'.format(now), index=0)
-    y_test.to_csv('../result/y_test_{}.csv'.format(now), index=0)
+    # x_test.to_csv('../result/x_test_{}.csv'.format(now), index=0)
+    # y_test.to_csv('../result/y_test_{}.csv'.format(now), index=0)
 
     # 样本预处理
-    x_train = x_train.drop([174], axis=1)
-    x_test = x_test.drop([174], axis=1)
+    # 剔除training中的date列
+    x_train = x_train.drop([180], axis=1)
+    x_test = x_test.drop([180], axis=1)
+    # 剔除lebel中的其他所有列， 只保留label列
     y_train = y_train.drop(['t_min', 't_max', 'max_min', 'tmp', 'date'], axis=1)
     y_test = y_test.drop(['t_min', 't_max', 'max_min', 'tmp', 'date'], axis=1)
 

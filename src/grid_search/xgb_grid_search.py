@@ -44,7 +44,6 @@ if __name__ == '__main__':
     model = xgb.train(**other_params)
     optimized_GBM = GridSearchCV(estimator=model, param_grid=cv_params, scoring='r2', cv=5, verbose=1, n_jobs=4)
 
-
     optimized_GBM.fit(x_train, y_train)
     evalute_result = optimized_GBM.grid_scores_
     print('每轮迭代运行结果:{0}'.format(evalute_result))
