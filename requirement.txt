@@ -35,7 +35,7 @@ opencv-python==4.1.0.25
 pandas==0.23.4
 pbr==5.1.2
 protobuf==3.6.1
-psutil==5.6.1
+psutil==5.6.6
 pyhanlp==0.1.44
 pymssql==2.1.4
 pyparsing==2.2.2
