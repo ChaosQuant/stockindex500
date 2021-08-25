@@ -54,7 +54,7 @@ smart-open==1.7.1
 SQLAlchemy==1.2.12
 subprocess32==3.5.3
 tensorboard==1.13.0
-tensorflow==1.13.1
+tensorflow==2.5.1
 tensorflow-estimator==1.13.0
 termcolor==1.1.0
 tqdm==4.31.1
