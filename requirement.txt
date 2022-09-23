@@ -34,7 +34,7 @@ numpy==1.15.3
 opencv-python==4.1.0.25
 pandas==0.23.4
 pbr==5.1.2
-protobuf==3.6.1
+protobuf==3.18.3
 psutil==5.6.1
 pyhanlp==0.1.44
 pymssql==2.1.4
